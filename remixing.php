@@ -11,23 +11,21 @@
     <link rel="icon" type="image/png" href="images/logo.png"> 
 </head>
 <body>
-    <header class="navbars d-flex align-items-center" id="header">
+<div class="container p-5">
+
+    <header class="navbars d-flex align-items-center" id="header" style="background:red;">
         <div class="logo">
-
             <h1 class="brand-name">Auralis</h1>
-
         </div>
         <div class="nav-right d-flex align-items-center">
             <i class="fa-solid fa-bars" style="font-size:21px;" data-bs-toggle="offcanvas" data-bs-target="#historyModal"></i>
-            <!-- <button class="btn login">Login</button>
-            <button class="btn register">Register</button> -->
         </div>
     </header>
     
-  
-    
+       
+    </div>
    <!-- Side Modal -->
-    <div class="offcanvas offcanvas-end custom-offcanvas" tabindex="-1" id="historyModal" aria-labelledby="historyModalLabel" >
+   <div class="offcanvas offcanvas-end custom-offcanvas" tabindex="-1" id="historyModal" aria-labelledby="historyModalLabel" >
         <div class="offcanvas-header" style="z-index:1000;">
             <h5 id="historyModalLabel" class="sidebar-title">History</h5>
             <button type="button" class="btn-close custom-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -73,3 +71,100 @@
         <li><i class="fa-solid fa-headphones-alt" style="font-size: 46px; color: rgba(255, 141, 0, 1);"></i></li>
     </ul>
 </div>
+<div class="container text-center mt-5">
+    <h2>Upload Audio Files for Remixing</h2>
+    <div class="mb-3">
+      <!-- Single file selection input -->
+      <input type="file" id="fileInput" accept="audio/*">
+      <button class="btn btn-secondary" onclick="addFile()">Add File</button>
+    </div>
+    <!-- Display list of added files -->
+    <div id="fileList" class="file-list"></div>
+    <button class="btn btn-primary mt-3" onclick="remixAudio()">Remix</button>
+    <div id="status" class="mt-3"></div>
+    <audio id="audioPlayer" controls class="mt-3" style="display: none;"></audio>
+  </div>
+
+  <script>
+    let selectedFiles = [];
+
+    function addFile() {
+      const fileInput = document.getElementById("fileInput");
+      const fileList = document.getElementById("fileList");
+      const status = document.getElementById("status");
+
+      if (fileInput.files.length === 0) {
+        status.innerText = "Please select a file.";
+        return;
+      }
+
+      if (selectedFiles.length >= 3) {
+        status.innerText = "You can only add up to 3 files.";
+        return;
+      }
+
+      const file = fileInput.files[0];
+      selectedFiles.push(file);
+
+      // Create a list item for the file
+      const listItem = document.createElement("div");
+      listItem.className = "file-item";
+      listItem.innerHTML = `<i class="fas fa-file-audio"></i> ${file.name}`;
+      fileList.appendChild(listItem);
+
+      // Clear the input
+      fileInput.value = "";
+      status.innerText = "";
+    }
+
+    async function remixAudio() {
+      const status = document.getElementById("status");
+      const audioPlayer = document.getElementById("audioPlayer");
+
+      if (selectedFiles.length < 2 || selectedFiles.length > 3) {
+        status.innerText = "Please add 2 or 3 audio files.";
+        return;
+      }
+
+      status.innerText = "Remixing audio...";
+
+      const formData = new FormData();
+      selectedFiles.forEach(file => formData.append("files", file));
+
+      try {
+        // Replace YOUR_NGROK_URL_HERE with your actual ngrok URL from Colab
+        const response = await fetch(" https://1167-35-185-146-202.ngrok-free.app/remix-music", {
+          method: "POST",
+          body: formData
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Remixing failed.");
+        }
+        
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        
+        // Play the remixed audio
+        audioPlayer.src = url;
+        audioPlayer.style.display = "block";
+        audioPlayer.play();
+        
+        // Show download icon button
+        status.innerHTML = `
+          <p>Remixed audio ready!</p>
+          <a href="${url}" download="remixed_audio.mp3" class="btn btn-success">
+            <i class="fas fa-download"></i> Download
+          </a>
+        `;
+      } catch (error) {
+        status.innerText = "Error: " + error.message;
+      }
+    }
+  </script>
+    <?php include("footer.php"); ?>
+</body>
+
+
+

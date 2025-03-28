@@ -11,23 +11,21 @@
     <link rel="icon" type="image/png" href="images/logo.png"> 
 </head>
 <body>
-    <header class="navbars d-flex align-items-center" id="header">
+<div class="container p-5">
+
+    <header class="navbars d-flex align-items-center" id="header" style="background:red;">
         <div class="logo">
-
             <h1 class="brand-name">Auralis</h1>
-
         </div>
         <div class="nav-right d-flex align-items-center">
             <i class="fa-solid fa-bars" style="font-size:21px;" data-bs-toggle="offcanvas" data-bs-target="#historyModal"></i>
-            <!-- <button class="btn login">Login</button>
-            <button class="btn register">Register</button> -->
         </div>
     </header>
     
-  
-    
+       
+    </div>
    <!-- Side Modal -->
-    <div class="offcanvas offcanvas-end custom-offcanvas" tabindex="-1" id="historyModal" aria-labelledby="historyModalLabel" >
+   <div class="offcanvas offcanvas-end custom-offcanvas" tabindex="-1" id="historyModal" aria-labelledby="historyModalLabel" >
         <div class="offcanvas-header" style="z-index:1000;">
             <h5 id="historyModalLabel" class="sidebar-title">History</h5>
             <button type="button" class="btn-close custom-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -73,3 +71,60 @@
         <li><i class="fa-solid fa-headphones-alt" style="font-size: 46px; color: rgba(255, 141, 0, 1);"></i></li>
     </ul>
 </div>
+<div class="container text-center mt-5">
+        <h2>Generate Music from Notes</h2>
+        <input type="text" id="notes" class="form-control" placeholder="Enter Notes (e.g. C D E F G)">
+        <button class="btn btn-primary mt-3" onclick="generateMusic()">Generate</button>
+        
+        <div id="status" class="mt-3"></div>
+        <audio id="audioPlayer" class="mt-3" controls style="display: none;"></audio>
+    </div>
+
+    <script>
+        async function generateMusic() {
+            const notes = document.getElementById("notes").value;
+            const ngrokUrl = "https://f54d-34-125-21-115.ngrok-free.app"; // Replace with Colab ngrok URL
+            
+            if (!notes) {
+                alert("Please enter musical notes.");
+                return;
+            }
+
+            document.getElementById("status").innerHTML = "<p>Generating music...</p>";
+
+            try {
+                const response = await fetch(`${ngrokUrl}/generate-music`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ notes: notes })
+                });
+
+                if (!response.ok) throw new Error("Server error!");
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+
+                // Play the generated music
+                const audioPlayer = document.getElementById("audioPlayer");
+                audioPlayer.src = url;
+                audioPlayer.style.display = "block";
+                audioPlayer.play();
+
+                // Show download icon
+                document.getElementById("status").innerHTML = `
+                    <p>Music Generated!</p>
+                    <a href="${url}" download="generated_music.mp3" class="btn btn-success">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                `;
+            } catch (error) {
+                document.getElementById("status").innerHTML = "<p>Error generating music.</p>";
+                console.error(error);
+            }
+        }
+    </script>
+    <?php include("footer.php"); ?>
+</body>
+
+
+

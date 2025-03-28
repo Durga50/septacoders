@@ -151,6 +151,11 @@ body{
     border-color:linear-gradient(90deg, rgba(255,8,0,1) 35%, rgba(255,141,0,0.9724264705882353) 100%); 
     
 }
+.custom-card {
+    pointer-events: auto;
+    cursor: pointer;
+}
+
 .font{
     font-size: 12px;
 }
@@ -415,4 +420,9 @@ body{
         border-radius: 50%;
     }
 
+}
+
+
+.text-center{
+    margin-top: 80px;
 }

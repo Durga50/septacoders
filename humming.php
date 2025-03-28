@@ -11,23 +11,19 @@
     <link rel="icon" type="image/png" href="images/logo.png"> 
 </head>
 <body>
-    <header class="navbars d-flex align-items-center" id="header">
+
+
+    <header class="navbars d-flex align-items-center" id="header" style="background:red;">
         <div class="logo">
-
             <h1 class="brand-name">Auralis</h1>
-
         </div>
         <div class="nav-right d-flex align-items-center">
             <i class="fa-solid fa-bars" style="font-size:21px;" data-bs-toggle="offcanvas" data-bs-target="#historyModal"></i>
-            <!-- <button class="btn login">Login</button>
-            <button class="btn register">Register</button> -->
         </div>
     </header>
-    
-  
-    
+
    <!-- Side Modal -->
-    <div class="offcanvas offcanvas-end custom-offcanvas" tabindex="-1" id="historyModal" aria-labelledby="historyModalLabel" >
+   <div class="offcanvas offcanvas-end custom-offcanvas" tabindex="-1" id="historyModal" aria-labelledby="historyModalLabel" >
         <div class="offcanvas-header" style="z-index:1000;">
             <h5 id="historyModalLabel" class="sidebar-title">History</h5>
             <button type="button" class="btn-close custom-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -73,3 +69,59 @@
         <li><i class="fa-solid fa-headphones-alt" style="font-size: 46px; color: rgba(255, 141, 0, 1);"></i></li>
     </ul>
 </div>
+
+<div class="container p-5">
+        <h2 class="text-center mb-4">Humming to Instrumental Music AI </h2>
+        
+        <form id="uploadForm">
+            <label>Upload Your Humming Audio:</label>
+            <input type="file" id="audioInput" class="form-control" accept="audio/*">
+            <br>
+            <button type="button" class="btn btn-primary" onclick="uploadAudio()">Generate Music</button>
+        </form>
+
+        <div id="output" class="mt-4"></div>
+    </div>
+    <script>
+        async function uploadAudio() {
+            let fileInput = document.getElementById("audioInput");
+            if (fileInput.files.length === 0) {
+                alert("Please upload an audio file.");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            let response = await fetch("https://81c7-35-243-251-14.ngrok-free.app/generate-music", {
+                method: "POST",
+                body: formData
+            });
+
+            if (response.ok) {
+                let blob = await response.blob();
+                let url = URL.createObjectURL(blob);
+
+                let outputDiv = document.getElementById("output");
+                outputDiv.innerHTML = `
+                    <h5>Generated Music 🎶</h5>
+                    <audio controls>
+                        <source src="${url}" type="audio/wav">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <br>
+                    <a href="${url}" download="generated_music.wav">
+                        <button class="btn btn-success mt-2">⬇️ Download</button>
+                    </a>
+                `;
+            } else {
+                alert("Error generating music.");
+            }
+        }
+    </script>
+
+    <?php include("footer.php"); ?>
+</body>
+
+
+

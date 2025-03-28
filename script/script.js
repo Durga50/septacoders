@@ -9,3 +9,6 @@ historyIcon.addEventListener("click", () => {
 closeModal.addEventListener("click", () => {
     historyModal.classList.remove("active");
 });
+
+
+

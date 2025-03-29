@@ -133,7 +133,7 @@
 
     try {
         // Replace with the correct ngrok URL printed from Colab
-        const response = await fetch("https://8798-35-185-114-174.ngrok-free.app/remix-music", {
+        const response = await fetch("https://5ef7-34-138-22-187.ngrok-free.app/remix-music", {
             method: "POST",
             body: formData,
             mode: "cors"  // Ensure CORS handling
@@ -163,9 +163,9 @@
     }
 }
 
-  </script>
-    <?php include("footer.php"); ?>
-</body>
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body></html>
 
 
 

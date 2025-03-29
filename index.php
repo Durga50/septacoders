@@ -1,40 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Counter AI</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-        textarea { width: 80%; height: 100px; }
-        button { padding: 10px 20px; margin-top: 10px; cursor: pointer; }
-    </style>
-</head>
-<body>
+<?php include("header.php"); ?>
 
-    <h2>Word Counter AI</h2>
-    <textarea id="text_input" placeholder="Enter your text here..."></textarea><br>
-    <button onclick="countWords()">Count Words</button>
-    <h3>Word Count: <span id="result">0</span></h3>
+<main class="content">
+    <div class="container">
+        <div class="row" style="z-index:1000;">
+            <!-- Card 1: Hum to Music -->
+            <div class="col-md-4">
+                <div class="custom-card" data-url="humming.php">
+                    <i class="fa-solid fa-file-audio card-icon"></i>
+                    <h5>Humming to music</h5>
+                    <p class="font">Turn your hums into beautifully composed melodies with AI-powered music generation.</p>
+                </div>
+            </div>
 
-    <script>
-        function countWords() {
-            var text = $("#text_input").val();
-            $.ajax({
-                url: "http://localhost:5000/count_words",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({ "text": text }),
-                success: function(response) {
-                    $("#result").text(response.word_count);
-                },
-                error: function() {
-                    alert("Error connecting to AI API");
-                }
-            });
-        }
-    </script>
+            <!-- Card 2: Remixing Audio -->
+            <div class="col-md-4">
+                <div class="custom-card" data-url="remixing.php">
+                    <i class="fa-solid fa-music card-icon"></i>
+                    <h5>Remixing Audio</h5>
+                    <p class="font">Mix and remix your favorite tracks effortlessly with advanced AI audio tools.</p>
+                </div>
+            </div>
 
-</body>
-</html>
+            <!-- Card 3: Music Notes -->
+            <div class="col-md-4">
+                <div class="custom-card" data-url="music_notes.php">
+                    <i class="fa-solid fa-microphone-music card-icon"></i>
+                    <h5>Music Notes</h5>
+                    <p class="font">Effortlessly transform your humming into a full-fledged melody with AI-powered music generation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const cards = document.querySelectorAll(".custom-card");
+
+    cards.forEach(card => {
+        card.addEventListener("click", function () {
+            const targetUrl = card.getAttribute("data-url"); // Get the page URL from data attribute
+            if (targetUrl) {
+                window.location.href = targetUrl; // Navigate to the respective page
+            }
+        });
+    });
+});
+
+</script>
+
+<?php include("footer.php"); ?>

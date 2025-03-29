@@ -118,50 +118,51 @@
     }
 
     async function remixAudio() {
-      const status = document.getElementById("status");
-      const audioPlayer = document.getElementById("audioPlayer");
+    const status = document.getElementById("status");
+    const audioPlayer = document.getElementById("audioPlayer");
 
-      if (selectedFiles.length < 2 || selectedFiles.length > 3) {
+    if (selectedFiles.length < 2 || selectedFiles.length > 3) {
         status.innerText = "Please add 2 or 3 audio files.";
         return;
-      }
+    }
 
-      status.innerText = "Remixing audio...";
+    status.innerText = "Remixing audio...";
 
-      const formData = new FormData();
-      selectedFiles.forEach(file => formData.append("files", file));
+    const formData = new FormData();
+    selectedFiles.forEach(file => formData.append("files", file));
 
-      try {
-        // Replace YOUR_NGROK_URL_HERE with your actual ngrok URL from Colab
-        const response = await fetch(" https://1167-35-185-146-202.ngrok-free.app/remix-music", {
-          method: "POST",
-          body: formData
+    try {
+        // Replace with the correct ngrok URL printed from Colab
+        const response = await fetch("https://8798-35-185-114-174.ngrok-free.app/remix-music", {
+            method: "POST",
+            body: formData,
+            mode: "cors"  // Ensure CORS handling
         });
-        
+
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || "Remixing failed.");
+            throw new Error("Remixing failed.");
         }
-        
+
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
-        
+
         // Play the remixed audio
         audioPlayer.src = url;
         audioPlayer.style.display = "block";
         audioPlayer.play();
-        
-        // Show download icon button
+
+        // Show download button
         status.innerHTML = `
-          <p>Remixed audio ready!</p>
-          <a href="${url}" download="remixed_audio.mp3" class="btn btn-success">
-            <i class="fas fa-download"></i> Download
-          </a>
+            <p>Remixed audio ready!</p>
+            <a href="${url}" download="remixed_audio.mp3" class="btn btn-success">
+                <i class="fas fa-download"></i> Download
+            </a>
         `;
-      } catch (error) {
+    } catch (error) {
         status.innerText = "Error: " + error.message;
-      }
     }
+}
+
   </script>
     <?php include("footer.php"); ?>
 </body>
